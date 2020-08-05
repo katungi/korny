@@ -7,6 +7,7 @@ function App() {
     // react must always return a single element
     <div>
      <Header/>
+     This is the home Page
       <Footer/>
     </div>
   );
