@@ -1,61 +1,58 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-// import { useParams} from 'react-router-dom';
+import React from 'react'
+import { useParams } from 'react-router-dom'
+import Loader from '../components/Loader';
+import { useAxiosGet } from '../Hooks/HttpRequests'
 
-function Product() {
-//   const url = "https://5e9623dc5b19f10016b5e31f.mockapi.io/api/v1/products/";
-    // const { id }= useParams();
-  const url = `https://5f2b896fffc88500167b7fe6.mockapi.io/api/products/`;
-  const [products, setProducts] = useState({
-      loading: false,
-      data: null
-  });
-//   let content = null;
+function Product(){
+    const { id } = useParams()
+    // Create your own Mock API: https://mockapi.io/
+    const url = `https://5e9623dc5b19f10016b5e31f.mockapi.io/api/v1/products/${id}`
+    
+    let product = useAxiosGet(url)
 
-  useEffect(() => {
-      setProducts({
-          loading:true,
-          data:null
-      })
-    const getProducts = async () => {
-      try {
-        const { data } = await axios.get(url);
-        // console.log(data.images);
-        setProducts({
-            loading: false,
-            data: data
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getProducts();
-  }, [url]);
+    let content = null
 
-  console.log(products.data);
-  return (
-    <>
-      {products ? (
-        products.data.map(({ id, name, price, description, images }) => (
-          <div key={id}>
-            <h1 className="text-2xl font-bold mb-3">{name}</h1>
-            <div>
-              {images ? (
-                <img src={images} alt={name} />
-              ) : (
-                  <img src="https://picsum.photos/200/300" alt="Ã°Å¸Å¡â‚¬" />
-                )}
+    if(product.error){
+        content = <div>
+            <div className="bg-blue-300 mb-2 p-3">
+                If you see this error. Please remember to create your own <a href="https://mockapi.io/">mock API</a>.
             </div>
-            <div className="font-bold text-xl mb-3">${price}</div>
-            <div>{description}</div>
-          </div>
-        ))
-      ) : (
-        <div>
-          <h1>Error</h1>
+            <div className="bg-red-300 p-3">
+                There was an error please refresh or try again later.
+            </div>
         </div>
-      )}
-    </>
-  );
+    }
+
+    if(product.loading){
+        content = <Loader></Loader>
+    }
+
+    if(product.data){
+        content = 
+        <div>
+            <h1 className="text-2xl font-bold mb-3">
+                {product.data.name}
+            </h1>
+            <div>
+                <img
+                    src={product.data.images[0].imageUrl}
+                    alt={product.data.name}
+                />
+            </div>
+            <div className="font-bold text-xl mb-3">
+                $ {product.data.price}
+            </div>
+            <div>
+                {product.data.description}
+            </div>
+        </div>
+    }
+
+    return (
+        <div className="container mx-auto">
+            {content}
+        </div>
+    )
 }
-export default Product;
+
+export default Product
