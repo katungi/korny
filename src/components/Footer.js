@@ -6,6 +6,6 @@ function Footer(){
             &copy; Copyright Daniel Dennis 2020
         </footer>
     )
-}
-
+    
+    }
 export default Footer;

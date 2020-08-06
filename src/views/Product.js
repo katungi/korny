@@ -32,7 +32,7 @@ function Product(){
     if(product.data){
         console.log(product.data.image)
         content = 
-        <div>
+        <div className="flex justify-center">
             <h1 className="text-2xl font-bold mb-3">
                 {product.data.name}
             </h1>
@@ -53,7 +53,7 @@ function Product(){
     }
 
     return (
-        <div className="container mx-auto">
+        <div className="container flex mx-auto justify-center">
             {content}
         </div>
     )
